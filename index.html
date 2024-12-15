@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beautiful Audio Player</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.7), rgba(0, 255, 255, 0.7), rgba(0, 0, 255, 0.7));
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite; /* Slower background transition */
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .tiles {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .tile {
+      padding: 20px 40px;
+      background: linear-gradient(45deg, #ff7e5f, #feb47b);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tile:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+
+    .tile.active {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+    }
+
+    .song-list {
+      display: none;
+      margin-top: 20px;
+      gap: 20px;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .song {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px; /* Added margin to provide spacing between songs */
+    }
+
+    .song:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .song.active {
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+    }
+
+    audio {
+      display: none;
+    }
+
+    .highlight {
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px #ff00ff; }
+      50% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff; }
+      100% { box-shadow: 0 0 10px #ff00ff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tiles">
+      <div id="spiritual" class="tile">Spiritual</div>
+      <div id="motivational" class="tile">Motivational</div>
+    </div>
+
+    <div id="spiritualSongs" class="song-list">
+      <div id="gayatriMantra" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684443/Gayatri_Mantra_The_most_powerful_Mantra_For_Spiritual_Growth_Divine_Naad_xf0zi5.mp3">Gayatri Mantra</div>
+      <div id="fiftyHzFocus" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684438/Y2meta.app_-_50_Hz_POWER_Gamma_Waves___Supercharge_Yourself___Genius_Focus_Brain_Power___Simply_Hypnotic_128_kbps_soblax.mp3">50Hz Focus</div>
+      <div id="yogaNidra" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1734286683/%E0%B0%B8%E0%B0%AE%E0%B0%B8%E0%B1%8D%E0%B0%A4_%E0%B0%B0%E0%B1%8B%E0%B0%97%E0%B0%BE%E0%B0%B2%E0%B1%8D%E0%B0%A8%E0%B0%BF_%E0%B0%A8%E0%B1%8D%E0%B0%AF%E0%B0%82_%E0%B0%9A%E0%B1%87%E0%B0%B8%E0%B1%81%E0%B0%95%E0%B1%81%E0%B0%A8%E0%B1%87_%E0%B0%AF%E0%B0%BE%E0%B0%97_%E0%B0%A8%E0%B0%BF%E0%B0%A6%E0%B1%8D%E0%B0%B0_%E0%B0%A8%E0%B1%81_%E0%B0%B8%E0%B1%81%E0%B0%B2%E0%B0%AD%E0%B0%82%E0%B0%97%E0%B0%BE_%E0%B0%A8%E0%B1%87%E0%B0%B0%E0%B1%8D%E0%B0%9A%E0%B1%81%E0%B0%95%E0%B0%BE%E0%B0%82%E0%B0%A1%E0%B0%BF.yoga_nidra_by_sagar_sinshuri_2_qpmfma.mp3">Yoga Nidra</div>
+      <div id="rudraGayatri" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684404/Rudra_Gayatri_Mantra_-_Armonian_lc2fjg.mp3">Rudra Gayatri</div>
+      <div id="sudarshanKriya" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684403/Sudarshan_-_Kriya_Ujjai_Breathing_Bhastrika_Om_Chanting_Pranayama_Count_English_pranayam_1_qctldj.mp3">Sudharshan Kriya</div>
+      <div id="ganeshaPancharatnam" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684387/Sri_Ganesha_Pancharatnam_Armonian_bfv4vj.mp3">Sri Ganesha Pancharatnam</div>
+      <div id="aigiriNandini" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684371/Aigiri_Nandini_Mahishasura_Mardini_Stotram_Armonian_hqfbls.mp3">Aigiri Nandini</div>
+      <div id="shivThandav" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684366/Shiv_Tandav_Stotram_-_Armonian_e8h5us.mp3">Shiv Thandav Stotram</div>
+      <div id="nirvanaShatakam" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684364/Shivoham_-_Nirvana_Shatakam_-_Armonian_i5go2w.mp3">Nirvana Shatakam</div>
+      <div id="agajananaPadmarkam" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684364/Agajanana_Padmarkam_gk0cxl.mp3">Agajanana Padmarkam</div>
+      <div id="sevenChakras" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732684319/RAM_YAM_HAM_OM_AUM___YouConvert.net__gu1670.mp3">7 Chakras</div>
+    </div>
+
+    <div id="motivationalSongs" class="song-list">
+      <div id="hanumanChalisa" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682396/Most_Powerful_Hanuman_Mantra_To_Remove_negativity_Manojavam_Maarutatulya_Vegam_Energetic_songs_tksqz0.mp3">Hanuman Chalisa</div>
+      <div id="vikram" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682391/VIKRAM_Title_Track_Lyric_Kamal_Haasan_Vijay_Sethupathi_Lokesh_Kanagaraj_Anirudh_we6wko.mp3">Vikram</div>
+      <div id="kgf" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682385/Y2meta.app_-_KGF_2_-_Toofan_Mass_Song___Cover_By_Raj_Bharath___Yash___Ravi_basur___Prasanth_Neel_128_kbps_juhgd3.mp3">KGF</div>
+      <div id="dheeraDheera" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682382/Y2meta.app_-_Dheera_Dheera_Full_Video_Song___KGF_Telugu_Movie___Yash___Prashanth_Neel___Hombale___Ravi_Basrur_128_kbps_yigwdr.mp3">Dheera Dheera</div>
+      <div id="og" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682375/Y2meta.app_-_OG-HUNGRY_CHEETAH_TELUGU_LYRICS__THEY_CALL_HIM_OG__4K_EDIT_pawankalyan_theycallhimog_hungryche_128_kbps_xkeliz.mp3">OG</div>
+      <div id="animalBGM" class="song" data-audio="https://res.cloudinary.com/dpragculd/video/upload/v1732682377/Y2meta.app_-_ANIMAL_BGM___KILLING_JEEJA___Harshavardhan_R___Ranbir_K_Sandeep_V_Bhushan_K_128_kbps_x9dtgh.mp3">Animal BGM</div>
+    </div>
+
+    <audio id="audioPlayer" controls>
+      <source id="audioSource" src="" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <script>
+    const spiritualTile = document.getElementById('spiritual');
+    const motivationalTile = document.getElementById('motivational');
+    const spiritualSongs = document.getElementById('spiritualSongs');
+    const motivationalSongs = document.getElementById('motivationalSongs');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audioSource = document.getElementById('audioSource');
+    let activeSong = null;
+    let isPlaying = false;
+
+    spiritualTile.addEventListener('click', () => {
+      spiritualSongs.style.display = 'flex';
+      motivationalSongs.style.display = 'none';
+    });
+
+    motivationalTile.addEventListener('click', () => {
+      motivationalSongs.style.display = 'flex';
+      spiritualSongs.style.display = 'none';
+    });
+
+    document.querySelectorAll('.song').forEach(song => {
+      song.addEventListener('click', function() {
+        // Stop the previous song if it's playing
+        if (activeSong && activeSong !== this) {
+          activeSong.classList.remove('active');
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+        }
+
+        if (activeSong === this && isPlaying) {
+          audioPlayer.pause();
+          isPlaying = false;
+          this.classList.remove('active');
+        } else if (activeSong === this && !isPlaying) {
+          audioPlayer.play();
+          isPlaying = true;
+          this.classList.add('active');
+        } else {
+          audioSource.src = this.getAttribute('data-audio');
+          audioPlayer.load();
+          audioPlayer.play();
+          isPlaying = true;
+          this.classList.add('active');
+          activeSong = this;
+        }
+      });
+    });
+
+    audioPlayer.addEventListener('play', () => {
+      isPlaying = true;
+    });
+
+    audioPlayer.addEventListener('pause', () => {
+      isPlaying = false;
+    });
+  </script>
+</body>
+</html>
